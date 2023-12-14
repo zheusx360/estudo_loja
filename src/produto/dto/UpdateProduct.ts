@@ -13,7 +13,7 @@ import {
 import {
   CaracteristicaProdutoDTO,
   ImagemProdutoDTO,
-} from './createProduct.dto';
+} from './CreateProduct.dto';
 
 export class UpdateProductDTO {
   @IsUUID(undefined, { message: 'ID do produto inválido' })
