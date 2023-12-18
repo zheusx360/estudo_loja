@@ -16,7 +16,7 @@ import { ProdutoService } from './produto.service';
 
 @Controller('produtos')
 export class ProdutoController {
-  constructor(private readonly produtoRepository: ProdutoService) {}
+  constructor(private readonly produtoService: ProdutoService) {}
 
   @Post()
   async criaNovo(@Body() dadosProduto: CreateProductDTO) {
@@ -32,13 +32,16 @@ export class ProdutoController {
     produto.caracteristicas = dadosProduto.caracteristicas;
     produto.imagens = dadosProduto.imagens;
 
-    const produtoCadastrado = this.produtoRepository.salva(produto);
-    return produtoCadastrado;
+    this.produtoService.Create(produto);
+    return {
+      message: `Produto ${produto.nome} criado com sucesso`,
+      id: produto.id,
+    };
   }
 
   @Get()
   async listaTodos() {
-    return this.produtoRepository.listaTodos();
+    return this.produtoService.List();
   }
 
   @Put('/:id')
@@ -46,10 +49,7 @@ export class ProdutoController {
     @Param('id') id: string,
     @Body() dadosProduto: UpdateProductDTO,
   ) {
-    const produtoAlterado = await this.produtoRepository.atualiza(
-      id,
-      dadosProduto,
-    );
+    const produtoAlterado = await this.produtoService.Update(id, dadosProduto);
 
     return {
       mensagem: 'produto atualizado com sucesso',
@@ -59,7 +59,7 @@ export class ProdutoController {
 
   @Delete('/:id')
   async remove(@Param('id') id: string) {
-    const produtoRemovido = await this.produtoRepository.remove(id);
+    const produtoRemovido = await this.produtoService.Delete(id);
 
     return {
       mensagem: 'produto removido com sucesso',

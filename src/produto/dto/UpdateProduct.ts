@@ -16,10 +16,8 @@ import {
 } from './CreateProduct.dto';
 
 export class UpdateProductDTO {
-  @IsUUID(undefined, { message: 'ID do produto inválido' })
-  id: string;
-
   @IsUUID(undefined, { message: 'ID de usuário inválido' })
+  @IsOptional()
   usuarioId: string;
 
   @IsString()

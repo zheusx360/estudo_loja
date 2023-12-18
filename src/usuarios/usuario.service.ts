@@ -1,54 +1,45 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ListUserDTO } from './dto/ListUser.dto';
 import { UsuarioEntity } from './usuario.entity';
+import { Repository } from 'typeorm';
+import { UpdateUserDTO } from './dto/UpdateUser.dto';
 
 @Injectable()
 export class UsuarioService {
-  private usuarios: UsuarioEntity[] = [];
+  constructor(
+    @InjectRepository(UsuarioEntity)
+    private readonly usuarioRepository: Repository<UsuarioEntity>,
+  ) {}
 
-  async saveUser(user: UsuarioEntity) {
-    await this.usuarios.push(user);
-  }
+  async ListUser() {
+    const userData = await this.usuarioRepository.find();
+    const userList = userData.map(
+      (user) => new ListUserDTO(user.id, user.name),
+    );
 
-  async getUser() {
-    return await this.usuarios;
+    return userList;
   }
 
   async emailVerify(email: string) {
-    const userExist = this.usuarios.find((e) => e.email === email);
-    return !!userExist;
+    const emailExist = await this.usuarioRepository.countBy({ email });
+    return !!emailExist;
   }
 
-  private getById(id: string) {
-    const user = this.usuarios.find((user) => user.id === id);
-
-    if (!user) {
-      throw new BadRequestException('Id informado não existe', {
-        cause: new Error(),
-      });
-    }
-
+  async GetById(id: string) {
+    const user = await this.usuarioRepository.findBy({ id });
     return user;
   }
 
-  async updateUser(id: string, userData: Partial<UsuarioEntity>) {
-    const getUser = this.getById(id);
-
-    Object.entries(userData).forEach(([key, value]) => {
-      if (key === 'id') {
-        return;
-      }
-
-      getUser[key] = value;
-    });
-
-    return getUser;
+  async Create(usuarioEntity: UsuarioEntity) {
+    await this.usuarioRepository.save(usuarioEntity);
   }
 
-  async deleteUser(id: string) {
-    const getUser = this.getById(id);
+  async Update(id: string, usuarioEntity: UpdateUserDTO) {
+    await this.usuarioRepository.update(id, usuarioEntity);
+  }
 
-    this.usuarios = this.usuarios.filter((user) => user.id !== id);
-
-    return getUser;
+  async Delete(id: string) {
+    await this.usuarioRepository.delete(id);
   }
 }

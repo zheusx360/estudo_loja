@@ -1,45 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { UpdateProductDTO } from './dto/updateProduct';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { ProdutoEntity } from './produto.entity';
+import { ListProductDTO } from './dto/ListProduct';
 
 @Injectable()
 export class ProdutoService {
-  private produtos: ProdutoEntity[] = [];
-
-  listaTodos() {
-    return this.produtos;
+  constructor(
+    @InjectRepository(ProdutoEntity)
+    private readonly produtoRepository: Repository<ProdutoEntity>,
+  ) {}
+  async Create(produto: ProdutoEntity) {
+    await this.produtoRepository.save(produto);
   }
 
-  salva(dadosProduto: ProdutoEntity) {
-    this.produtos.push(dadosProduto);
-    return dadosProduto;
+  async List() {
+    const product = await this.produtoRepository.find();
+    const productList = product.map(
+      (prod) =>
+        new ListProductDTO(
+          prod.id,
+          prod.usuarioId,
+          prod.nome,
+          prod.valor,
+          prod.quantidade,
+          prod.descricao,
+          prod.categoria,
+          prod.caracteristicas,
+          prod.imagens,
+        ),
+    );
+    return productList;
   }
 
-  private buscaPorId(id: string) {
-    const possivelProduto = this.produtos.find((produto) => produto.id === id);
-
-    if (!possivelProduto) {
-      throw new Error('Produto não existe');
-    }
-
-    return possivelProduto;
+  async Update(id: string, produto: UpdateProductDTO) {
+    await this.produtoRepository.update(id, produto);
   }
 
-  async atualiza(id: string, dadosProduto: Partial<ProdutoEntity>) {
-    const dadosNaoAtualizaveis = ['id', 'usuarioId'];
-    const produto = this.buscaPorId(id);
-    Object.entries(dadosProduto).forEach(([chave, valor]) => {
-      if (dadosNaoAtualizaveis.includes(chave)) {
-        return;
-      }
-      produto[chave] = valor;
-    });
-
-    return produto;
-  }
-
-  async remove(id: string) {
-    const produtoRemovido = this.buscaPorId(id);
-    this.produtos = this.produtos.filter((produto) => produto.id !== id);
-    return produtoRemovido;
+  async Delete(id: string) {
+    await this.produtoRepository.delete(id);
   }
 }

@@ -7,12 +7,11 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { UsuarioService } from './usuario.service';
 import { CreateUserDTO } from './dto/CreateUser.dto';
 import { UsuarioEntity } from './usuario.entity';
 import { v4 as uuid } from 'uuid';
-import { ListUserDTO } from './dto/ListUser.dto';
 import { UpdateUserDTO } from './dto/UpdateUser.dto';
+import { UsuarioService } from './usuario.service';
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -26,7 +25,7 @@ export class UsuarioController {
     usuarioEntity.password = userData.password;
     usuarioEntity.id = uuid();
 
-    this.usuarioService.saveUser(usuarioEntity);
+    this.usuarioService.Create(usuarioEntity);
     return {
       message: `Usuário ${userData.name} criado com sucesso`,
       id: usuarioEntity.id,
@@ -35,35 +34,35 @@ export class UsuarioController {
 
   @Get('/get-all')
   async ListUsers() {
-    const getUsers = await this.usuarioService.getUser();
-    const userList = getUsers.map(
-      (user) => new ListUserDTO(user.id, user.name),
-    );
+    const userList = await this.usuarioService.ListUser();
+
+    return userList;
+  }
+  @Get('/get-by-id/:id')
+  async GetById(@Param('id') id: string) {
+    const userList = await this.usuarioService.GetById(id);
 
     return userList;
   }
 
   @Put('update/:id')
   async updateUser(@Param('id') id: string, @Body() userData: UpdateUserDTO) {
-    console.log('log');
-    const updatedUser = await this.usuarioService.updateUser(id, userData);
-    console.log('log2');
+    await this.usuarioService.Update(id, userData);
 
     return {
-      user: updatedUser['name'],
-      email: updatedUser['email'],
-      message: `Usuário ${updatedUser['name']} atualizado.`,
+      user: userData.name,
+      email: userData.email,
+      message: `Usuário atualizado.`,
     };
   }
 
   @Delete('delete/:id')
   async deleteUser(@Param('id') id: string) {
-    const userRemoved = await this.usuarioService.deleteUser(id);
+    await this.usuarioService.Delete(id);
 
     return {
       id: id,
-      user: userRemoved['name'],
-      message: `Usuário ${userRemoved['name']} removido com sucesso`,
+      message: `Usuário removido com sucesso`,
     };
   }
 }
