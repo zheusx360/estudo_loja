@@ -10,50 +10,12 @@ import {
 import { EmailValidator } from '../validation/validate-email-unique.validator';
 import { Type } from 'class-transformer';
 import { UsuarioEntity } from '../usuario.entity';
-
-// export class EnderecoDTO {
-//   id: string;
-
-//   @IsUUID(undefined, { message: 'ID de usuário inválido' })
-//   userId: string;
-
-//   @IsString()
-//   @IsNotEmpty()
-//   tipoEndereco: string;
-
-//   @IsString()
-//   @IsNotEmpty()
-//   cep: string;
-
-//   @IsString()
-//   @IsNotEmpty()
-//   rua: string;
-
-//   @IsString()
-//   @IsNotEmpty()
-//   numero: string;
-
-//   @IsString()
-//   @IsNotEmpty()
-//   complemento: string;
-
-//   @IsString()
-//   @IsNotEmpty()
-//   cidade: string;
-
-//   @IsString()
-//   @IsNotEmpty()
-//   estado: string;
-
-//   usuario: UsuarioEntity;
-// }
-
 export class EnderecoDTO {
   id: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Tipo Endereço não pode ser vazio' })
-  tipo_endereco: string;
+  tipoEndereco: string;
   @IsString()
   @IsNotEmpty({ message: 'Cep não pode ser vazio' })
   cep: string;
@@ -64,7 +26,6 @@ export class EnderecoDTO {
   @IsNotEmpty({ message: 'Número não pode ser vazio' })
   numero: string;
   @IsString()
-  @IsNotEmpty({ message: 'Complemento não pode ser vazio' })
   complemento: string;
   @IsString()
   @IsNotEmpty({ message: 'Cidade não pode ser vazio' })

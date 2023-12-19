@@ -4,6 +4,7 @@ import { ListUserDTO } from './dto/ListUser.dto';
 import { UsuarioEntity } from './usuario.entity';
 import { Repository } from 'typeorm';
 import { UpdateUserDTO } from './dto/UpdateUser.dto';
+import { CreateUserDTO } from './dto/CreateUser.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -12,7 +13,7 @@ export class UsuarioService {
     private readonly usuarioRepository: Repository<UsuarioEntity>,
   ) {}
 
-  async ListUser() {
+  async listarUsuario() {
     const userData = await this.usuarioRepository.find();
     const userList = userData.map(
       (user) => new ListUserDTO(user.id, user.name),
@@ -26,20 +27,27 @@ export class UsuarioService {
     return !!emailExist;
   }
 
-  async GetById(id: string) {
+  async usuarioId(id: string) {
     const user = await this.usuarioRepository.findBy({ id });
     return user;
   }
 
-  async Create(usuarioEntity: UsuarioEntity) {
-    await this.usuarioRepository.save(usuarioEntity);
+  async criaUsuario(usuarioData: CreateUserDTO) {
+    const usuarioEntity = new UsuarioEntity();
+
+    usuarioEntity.email = usuarioData.email;
+    usuarioEntity.name = usuarioData.name;
+    usuarioEntity.password = usuarioData.password;
+    usuarioEntity.endereco = usuarioData.endereco;
+
+    return this.usuarioRepository.save(usuarioEntity);
   }
 
-  async Update(id: string, usuarioEntity: UpdateUserDTO) {
+  async updateUsuario(id: string, usuarioEntity: UpdateUserDTO) {
     await this.usuarioRepository.update(id, usuarioEntity);
   }
 
-  async Delete(id: string) {
+  async deleteUsuario(id: string) {
     await this.usuarioRepository.delete(id);
   }
 }

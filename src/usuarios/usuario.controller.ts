@@ -8,8 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CreateUserDTO } from './dto/CreateUser.dto';
-import { UsuarioEntity } from './usuario.entity';
-import { v4 as uuid } from 'uuid';
 import { UpdateUserDTO } from './dto/UpdateUser.dto';
 import { UsuarioService } from './usuario.service';
 
@@ -19,36 +17,30 @@ export class UsuarioController {
 
   @Post()
   async createUser(@Body() userData: CreateUserDTO) {
-    const usuarioEntity = new UsuarioEntity();
-    usuarioEntity.email = userData.email;
-    usuarioEntity.name = userData.name;
-    usuarioEntity.password = userData.password;
-    usuarioEntity.id = uuid();
-    usuarioEntity.endereco = userData.endereco;
+    const novoUsuario = await this.usuarioService.criaUsuario(userData);
 
-    this.usuarioService.Create(usuarioEntity);
     return {
-      message: `Usuário ${userData.name} criado com sucesso`,
-      id: usuarioEntity.id,
+      message: `Usuário ${novoUsuario['name']} criado com sucesso`,
+      id: novoUsuario['id'],
     };
   }
 
   @Get('/get-all')
   async ListUsers() {
-    const userList = await this.usuarioService.ListUser();
+    const userList = await this.usuarioService.listarUsuario();
 
     return userList;
   }
   @Get('/get-by-id/:id')
   async GetById(@Param('id') id: string) {
-    const userList = await this.usuarioService.GetById(id);
+    const userList = await this.usuarioService.usuarioId(id);
 
     return userList;
   }
 
   @Put('update/:id')
   async updateUser(@Param('id') id: string, @Body() userData: UpdateUserDTO) {
-    await this.usuarioService.Update(id, userData);
+    await this.usuarioService.updateUsuario(id, userData);
 
     return {
       user: userData.name,
@@ -59,7 +51,7 @@ export class UsuarioController {
 
   @Delete('delete/:id')
   async deleteUser(@Param('id') id: string) {
-    await this.usuarioService.Delete(id);
+    await this.usuarioService.deleteUsuario(id);
 
     return {
       id: id,

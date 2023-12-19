@@ -7,7 +7,7 @@ export class EnderecoEntity {
   id: string;
 
   @Column({ name: 'tipo_endereco', length: 100, nullable: false })
-  tipo_endereco: string;
+  tipoEndereco: string;
 
   @Column({ name: 'cep', length: 15, nullable: false })
   cep: string;

@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProdutoEntity } from './produto.entity';
 import { ListProductDTO } from './dto/ListProduct';
+import { CreateProductDTO } from './dto/CreateProduct.dto';
 
 @Injectable()
 export class ProdutoService {
@@ -11,11 +12,22 @@ export class ProdutoService {
     @InjectRepository(ProdutoEntity)
     private readonly produtoRepository: Repository<ProdutoEntity>,
   ) {}
-  async Create(produto: ProdutoEntity) {
-    await this.produtoRepository.save(produto);
+  async criaProduto(dadosProduto: CreateProductDTO) {
+    const produtoEntity = new ProdutoEntity();
+
+    produtoEntity.nome = dadosProduto.nome;
+    produtoEntity.usuarioId = dadosProduto.usuarioId;
+    produtoEntity.valor = dadosProduto.valor;
+    produtoEntity.quantidadeDisponivel = dadosProduto.quantidadeDisponivel;
+    produtoEntity.descricao = dadosProduto.descricao;
+    produtoEntity.categoria = dadosProduto.categoria;
+    produtoEntity.caracteristicas = dadosProduto.caracteristicas;
+    produtoEntity.imagens = dadosProduto.imagens;
+
+    return await this.produtoRepository.save(produtoEntity);
   }
 
-  async List() {
+  async listProduto() {
     const product = await this.produtoRepository.find();
     const productList = product.map(
       (prod) =>
@@ -24,7 +36,7 @@ export class ProdutoService {
           prod.usuarioId,
           prod.nome,
           prod.valor,
-          prod.quantidade,
+          prod.quantidadeDisponivel,
           prod.descricao,
           prod.categoria,
           prod.caracteristicas,
@@ -34,11 +46,11 @@ export class ProdutoService {
     return productList;
   }
 
-  async Update(id: string, produto: UpdateProductDTO) {
+  async updateProduto(id: string, produto: UpdateProductDTO) {
     await this.produtoRepository.update(id, produto);
   }
 
-  async Delete(id: string) {
+  async deleteProduto(id: string) {
     await this.produtoRepository.delete(id);
   }
 }
