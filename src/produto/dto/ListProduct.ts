@@ -11,7 +11,6 @@ class ListaImagemProdutoDTO {
 export class ListProductDTO {
   constructor(
     readonly id: string,
-    readonly usuarioId: string,
     readonly nome: string,
     readonly valor: number,
     readonly quantidade: number,
