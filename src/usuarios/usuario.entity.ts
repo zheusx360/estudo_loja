@@ -1,3 +1,4 @@
+import { EnderecoEntity } from './endereco.entity';
 import {
   Entity,
   Column,
@@ -5,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'usuarios' })
@@ -27,4 +29,10 @@ export class UsuarioEntity {
   updateAt: string;
   @DeleteDateColumn({ name: 'delete_At' })
   deleteAt: string;
+
+  @OneToMany(() => EnderecoEntity, (enderecoEntity) => enderecoEntity.usuario, {
+    cascade: true,
+    eager: true,
+  })
+  endereco: EnderecoEntity[];
 }

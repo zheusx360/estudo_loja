@@ -24,6 +24,7 @@ export class UsuarioController {
     usuarioEntity.name = userData.name;
     usuarioEntity.password = userData.password;
     usuarioEntity.id = uuid();
+    usuarioEntity.endereco = userData.endereco;
 
     this.usuarioService.Create(usuarioEntity);
     return {
