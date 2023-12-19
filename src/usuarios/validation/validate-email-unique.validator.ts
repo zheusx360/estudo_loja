@@ -12,7 +12,7 @@ import { UsuarioService } from '../usuario.service';
 export class EmailValidatorUnique implements ValidatorConstraintInterface {
   constructor(private usuarioService: UsuarioService) {}
 
-  async validate(value: any, {}): Promise<boolean> {
+  async validate(value: any): Promise<boolean> {
     const emailExist = await this.usuarioService.emailVerify(value);
     return !emailExist;
   }

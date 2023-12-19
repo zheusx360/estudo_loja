@@ -1,3 +1,4 @@
+import { PedidoEntity } from '../pedido/pedido.entity';
 import { EnderecoEntity } from './endereco.entity';
 import {
   Entity,
@@ -35,4 +36,7 @@ export class UsuarioEntity {
     eager: true,
   })
   endereco: EnderecoEntity[];
+
+  @OneToMany(() => PedidoEntity, (pedidoEntity) => pedidoEntity.usuario)
+  pedidos: PedidoEntity[];
 }

@@ -42,6 +42,8 @@ export class ProdutoController {
       dadosProduto,
     );
 
+    console.log('Produto', produtoAlterado);
+
     return {
       mensagem: 'produto atualizado com sucesso',
       produto: produtoAlterado,

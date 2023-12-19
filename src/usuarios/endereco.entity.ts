@@ -15,16 +15,16 @@ export class EnderecoEntity {
   @Column({ name: 'rua', length: 255, nullable: false })
   rua: string;
 
-  @Column({ name: 'numero', length: 10, nullable: null })
+  @Column({ name: 'numero', length: 10, nullable: false })
   numero: string;
 
   @Column({ name: 'complemento', length: 100 })
   complemento: string;
 
-  @Column({ name: 'cidade', length: 70, nullable: null })
+  @Column({ name: 'cidade', length: 70, nullable: false })
   cidade: string;
 
-  @Column({ name: 'estado', length: 70, nullable: null })
+  @Column({ name: 'estado', length: 70, nullable: false })
   estado: string;
 
   @ManyToOne(() => UsuarioEntity, (usuarioEntity) => usuarioEntity.endereco, {
