@@ -15,13 +15,7 @@ export class ProdutoService {
   async criaProduto(dadosProduto: CreateProductDTO) {
     const produtoEntity = new ProdutoEntity();
 
-    produtoEntity.nome = dadosProduto.nome;
-    produtoEntity.valor = dadosProduto.valor;
-    produtoEntity.quantidadeDisponivel = dadosProduto.quantidadeDisponivel;
-    produtoEntity.descricao = dadosProduto.descricao;
-    produtoEntity.categoria = dadosProduto.categoria;
-    produtoEntity.caracteristicas = dadosProduto.caracteristicas;
-    produtoEntity.imagens = dadosProduto.imagens;
+    Object.assign(produtoEntity, dadosProduto);
 
     return await this.produtoRepository.save(produtoEntity);
   }
