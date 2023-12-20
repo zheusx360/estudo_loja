@@ -6,10 +6,12 @@ import {
   Put,
   Param,
   Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDTO } from './dto/CreateUser.dto';
 import { UpdateUserDTO } from './dto/UpdateUser.dto';
 import { UsuarioService } from './usuario.service';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -26,6 +28,8 @@ export class UsuarioController {
   }
 
   @Get('/get-all')
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('lista_de_usuarios')
   async ListUsers() {
     const userList = await this.usuarioService.listarUsuario();
 

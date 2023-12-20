@@ -38,6 +38,12 @@ export class ProdutoService {
     return productList;
   }
 
+  async listById(id: string) {
+    const produto = await this.produtoRepository.findOneBy({ id });
+
+    return produto;
+  }
+
   async updateProduto(id: string, novosDados: UpdateProductDTO) {
     const entityName = await this.produtoRepository.findOneBy({ id });
 
